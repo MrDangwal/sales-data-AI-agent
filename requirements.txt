@@ -1,0 +1,9 @@
+crewai
+openai
+langchain-openai
+streamlit
+pandas
+duckdb
+python-dotenv
+tabulate
+pytest

@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Sales Regression Report (fast)</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 24px; color: #111827; }
+    h1 { margin-bottom: 4px; }
+    .muted { color: #6b7280; margin-top: 0; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 12px; }
+    th, td { border: 1px solid #e5e7eb; padding: 8px; vertical-align: top; text-align: left; }
+    th { background: #f3f4f6; position: sticky; top: 0; }
+    tr:nth-child(even) { background: #fafafa; }
+    .section { margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <h1>Sales Regression Report (fast)</h1>
+  <p class="muted">Generated at 2026-02-08T23:39:13</p>
+
+  <div class="section">
+    <h2>Summary</h2>
+    <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>total_questions</th>
+      <th>approved_or_repaired</th>
+      <th>errors</th>
+      <th>empty_results</th>
+      <th>avg_runner_latency_s</th>
+      <th>mode</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>40</td>
+      <td>40</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.008</td>
+      <td>fast</td>
+    </tr>
+  </tbody>
+</table>
+  </div>
+
+  <div class="section">
+    <h2>Detailed Results</h2>
+    <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>index</th>
+      <th>section</th>
+      <th>question</th>
+      <th>mode</th>
+      <th>source</th>
+      <th>validation_status</th>
+      <th>result_rows</th>
+      <th>result_columns</th>
+      <th>sql</th>
+      <th>insights</th>
+      <th>next_question</th>
+      <th>validation_notes</th>
+      <th>viz_required</th>
+      <th>viz_status</th>
+      <th>viz_chart_type</th>
+      <th>viz_x</th>
+      <th>viz_y</th>
+      <th>pipeline_elapsed_seconds</th>
+      <th>runner_elapsed_seconds</th>
+      <th>error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>1) Amazon Sale Report.csv (`sales_amazon_sale_report` / `mart_amazon_orders`)</td>
+      <td>Top 10 states by total sales and total units.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "month_label" AS dimension,\n  SUM(COALESCE("gross_amt", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_international_sales"\nWHERE "month_label" IS NOT NULL\nGROUP BY "month_label"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 843,551.00 to 2,865,134.00. | Top `dimension` by `metric_value`: `OCT-21`.</td>
+      <td>Do you want a month-wise trend for these top geographies?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.229</td>
+      <td>0.229</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>1) Amazon Sale Report.csv (`sales_amazon_sale_report` / `mart_amazon_orders`)</td>
+      <td>Cancellation rate by fulfillment channel with total order counts.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>2</td>
+      <td>dimension, cancellation_rate, total_records</td>
+      <td>SELECT\n  "fulfillment" AS dimension,\n  100.0 * SUM(CASE WHEN COALESCE("is_cancelled", FALSE) THEN 1 ELSE 0 END) / NULLIF(COUNT(*), 0) AS cancellation_rate,\n  COUNT(*) AS total_records\nFROM "mart_amazon_orders"\nWHERE "fulfillment" IS NOT NULL\nGROUP BY "fulfillment"\nORDER BY cancellation_rate DESC\nLIMIT 10</td>
+      <td>Returned 2 rows across 3 columns. | `cancellation_rate` range: 12.79 to 17.47. | Top `dimension` by `cancellation_rate`: `MERCHANT`. | Cancellation metric surfaced via `cancellation_rate`.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>1) Amazon Sale Report.csv (`sales_amazon_sale_report` / `mart_amazon_orders`)</td>
+      <td>Month-wise total sales trend with total orders.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>4</td>
+      <td>period, metric_value, total_records</td>
+      <td>SELECT\n  CAST("order_month" AS VARCHAR) AS period,\n  SUM(COALESCE("amount", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_amazon_orders"\nWHERE "order_month" IS NOT NULL\nGROUP BY 1\nORDER BY 1</td>
+      <td>Returned 4 rows across 3 columns. | `metric_value` range: 101,683.85 to 28,838,708.32. | Top `period` by `metric_value`: `2022-04`. | Trend axis identified as `period`.</td>
+      <td>Would you like the same trend segmented by top categories?</td>
+      <td></td>
+      <td>True</td>
+      <td>validated</td>
+      <td>line</td>
+      <td>period</td>
+      <td>metric_value</td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>1) Amazon Sale Report.csv (`sales_amazon_sale_report` / `mart_amazon_orders`)</td>
+      <td>Top 10 categories by average order value and total sales.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "month_label" AS dimension,\n  AVG(COALESCE("gross_amt", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_international_sales"\nWHERE "month_label" IS NOT NULL\nGROUP BY "month_label"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 754.25 to 1,481.61. | Top `dimension` by `metric_value`: `JUN-21`.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>1) Amazon Sale Report.csv (`sales_amazon_sale_report` / `mart_amazon_orders`)</td>
+      <td>Top 15 cities by revenue contribution.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>15</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "month_label" AS dimension,\n  SUM(COALESCE("gross_amt", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_international_sales"\nWHERE "month_label" IS NOT NULL\nGROUP BY "month_label"\nORDER BY metric_value DESC\nLIMIT 15</td>
+      <td>Returned 15 rows across 3 columns. | `metric_value` range: 23,390.00 to 2,865,134.00. | Top `dimension` by `metric_value`: `OCT-21`.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>2) International sale Report.csv (`sales_international_sale_report`)</td>
+      <td>Top 10 customers by gross amount.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "order_id" AS dimension,\n  SUM(COALESCE("amount", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_amazon_orders"\nWHERE "order_id" IS NOT NULL\nGROUP BY "order_id"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 6,282.00 to 8,636.00. | Top `dimension` by `metric_value`: `408-3363121-6123562`.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.007</td>
+      <td>0.007</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>2) International sale Report.csv (`sales_international_sale_report`)</td>
+      <td>Month-wise gross amount trend.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>4</td>
+      <td>period, metric_value, total_records</td>
+      <td>SELECT\n  CAST("order_month" AS VARCHAR) AS period,\n  SUM(COALESCE("amount", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_amazon_orders"\nWHERE "order_month" IS NOT NULL\nGROUP BY 1\nORDER BY 1</td>
+      <td>Returned 4 rows across 3 columns. | `metric_value` range: 101,683.85 to 28,838,708.32. | Top `period` by `metric_value`: `2022-04`. | Trend axis identified as `period`.</td>
+      <td>Would you like the same trend segmented by top categories?</td>
+      <td></td>
+      <td>True</td>
+      <td>validated</td>
+      <td>line</td>
+      <td>period</td>
+      <td>metric_value</td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>2) International sale Report.csv (`sales_international_sale_report`)</td>
+      <td>Top styles by total gross amount and pieces sold.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "order_id" AS dimension,\n  SUM(COALESCE("amount", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_amazon_orders"\nWHERE "order_id" IS NOT NULL\nGROUP BY "order_id"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 6,282.00 to 8,636.00. | Top `dimension` by `metric_value`: `408-3363121-6123562`.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.007</td>
+      <td>0.007</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>2) International sale Report.csv (`sales_international_sale_report`)</td>
+      <td>Size-wise contribution to gross amount.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("amount", 0)) AS total_metric,\n  AVG(COALESCE("amount", 0)) AS avg_metric\nFROM "mart_amazon_orders"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 128,975.00 to 128,975.00.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>2) International sale Report.csv (`sales_international_sale_report`)</td>
+      <td>Highest average rate SKUs with at least 20 records.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "sku" AS dimension,\n  AVG(COALESCE("rate", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_international_sales"\nWHERE "sku" IS NOT NULL\nGROUP BY "sku"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 2,798.38 to 6,755.00. | Top `dimension` by `metric_value`: `SHIPPING CHARGES`.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.003</td>
+      <td>0.003</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>3) Sale Report.csv (`sales_sale_report`)</td>
+      <td>Top categories by available stock.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "sku_code" AS dimension,\n  SUM(COALESCE("stock", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_stock_inventory"\nWHERE "sku_code" IS NOT NULL\nGROUP BY "sku_code"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 844.00 to 1,234.00. | Top `dimension` by `metric_value`: `JNE3405-KR-XXL`.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>3) Sale Report.csv (`sales_sale_report`)</td>
+      <td>Color-wise stock distribution.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("stock", 0)) AS total_metric,\n  AVG(COALESCE("stock", 0)) AS avg_metric\nFROM "mart_stock_inventory"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 9,271.00 to 9,271.00.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>3) Sale Report.csv (`sales_sale_report`)</td>
+      <td>Size-wise stock concentration within each category.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, metric_share_pct</td>
+      <td>WITH base AS (\n  SELECT\n    "category" AS dimension,\n    SUM(COALESCE("stock", 0)) AS metric_value\n  FROM "mart_stock_inventory"\n  WHERE "category" IS NOT NULL\n  GROUP BY "category"\n)\nSELECT\n  dimension,\n  metric_value,\n  100.0 * metric_value / NULLIF((SELECT SUM(metric_value) FROM base), 0) AS metric_share_pct\nFROM base\nORDER BY metric_share_pct DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 2,777.00 to 114,339.00. | Top `dimension` by `metric_value`: `KURTA`.</td>
+      <td>Should I add cancellation rate and volume beside the category metric?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>3) Sale Report.csv (`sales_sale_report`)</td>
+      <td>Top 20 SKU codes by stock.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>20</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "sku_code" AS dimension,\n  SUM(COALESCE("stock", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_stock_inventory"\nWHERE "sku_code" IS NOT NULL\nGROUP BY "sku_code"\nORDER BY metric_value DESC\nLIMIT 20</td>
+      <td>Returned 20 rows across 3 columns. | `metric_value` range: 593.00 to 1,234.00. | Top `dimension` by `metric_value`: `JNE3405-KR-XXL`.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>3) Sale Report.csv (`sales_sale_report`)</td>
+      <td>Designs with widest size availability.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("qty", 0)) AS total_metric,\n  AVG(COALESCE("qty", 0)) AS avg_metric\nFROM "mart_amazon_orders"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 128,975.00 to 128,975.00.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td>4) May-2022.csv (`sales_may_2022`)</td>
+      <td>Compare channel MRP columns and find highest priced channel per SKU.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "sku" AS dimension,\n  SUM(COALESCE("mrp_old", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_may_pricing"\nWHERE "sku" IS NOT NULL\nGROUP BY "sku"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 5,395.00 to 5,997.00. | Top `dimension` by `metric_value`: `OS1109_L`.</td>
+      <td>Should I calculate spread percent and outlier products for this pricing view?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>17</td>
+      <td>4) May-2022.csv (`sales_may_2022`)</td>
+      <td>Top categories by average TP and average MRP.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "sku" AS dimension,\n  AVG(COALESCE("mrp_old", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_may_pricing"\nWHERE "sku" IS NOT NULL\nGROUP BY "sku"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 5,395.00 to 5,997.00. | Top `dimension` by `metric_value`: `OS1109_L`.</td>
+      <td>Should I calculate spread percent and outlier products for this pricing view?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>4) May-2022.csv (`sales_may_2022`)</td>
+      <td>SKUs with biggest spread between TP and Amazon MRP.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("qty", 0)) AS total_metric,\n  AVG(COALESCE("qty", 0)) AS avg_metric\nFROM "mart_amazon_orders"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 128,975.00 to 128,975.00.</td>
+      <td>Should I calculate spread percent and outlier products for this pricing view?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>4) May-2022.csv (`sales_may_2022`)</td>
+      <td>Category-wise average weight and TP.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("mrp_old", 0)) AS total_metric,\n  AVG(COALESCE("mrp_old", 0)) AS avg_metric\nFROM "mart_may_pricing"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 1,330.00 to 1,330.00.</td>
+      <td>Should I add cancellation rate and volume beside the category metric?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>4) May-2022.csv (`sales_may_2022`)</td>
+      <td>Styles with most SKUs and their average channel MRP.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("mrp_old", 0)) AS total_metric,\n  AVG(COALESCE("mrp_old", 0)) AS avg_metric\nFROM "mart_may_pricing"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 1,330.00 to 1,330.00.</td>
+      <td>Should I calculate spread percent and outlier products for this pricing view?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>5) P  L March 2021.csv (`sales_p_l_march_2021`)</td>
+      <td>Difference analysis between TP 1 and TP 2 by category.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>5</td>
+      <td>dimension, metric_a, metric_b, metric_delta</td>
+      <td>SELECT\n  "category" AS dimension,\n  AVG(COALESCE("mrp_old", 0)) AS metric_a,\n  AVG(COALESCE("weight", 0)) AS metric_b,\n  AVG(COALESCE("mrp_old", 0) - COALESCE("weight", 0)) AS metric_delta\nFROM "mart_pl_march_pricing"\nWHERE "category" IS NOT NULL\nGROUP BY "category"\nORDER BY ABS(metric_delta) DESC\nLIMIT 10</td>
+      <td>Returned 5 rows across 4 columns. | `metric_a` range: 1,728.33 to 3,151.25. | Top `dimension` by `metric_a`: `GOWN`.</td>
+      <td>Should I add cancellation rate and volume beside the category metric?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.003</td>
+      <td>0.003</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>5) P  L March 2021.csv (`sales_p_l_march_2021`)</td>
+      <td>Top categories by average margin proxy (MRP Old - TP 2).</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "sku" AS dimension,\n  AVG(COALESCE("mrp_old", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_pl_march_pricing"\nWHERE "sku" IS NOT NULL\nGROUP BY "sku"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 5,395.00 to 5,997.00. | Top `dimension` by `metric_value`: `OS1109_M`.</td>
+      <td>Should I calculate spread percent and outlier products for this pricing view?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>23</td>
+      <td>5) P  L March 2021.csv (`sales_p_l_march_2021`)</td>
+      <td>SKUs with highest TP 2 values.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "sku" AS dimension,\n  SUM(COALESCE("mrp_old", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_pl_march_pricing"\nWHERE "sku" IS NOT NULL\nGROUP BY "sku"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 5,395.00 to 5,997.00. | Top `dimension` by `metric_value`: `OS1109_XL`.</td>
+      <td>Should I calculate spread percent and outlier products for this pricing view?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>24</td>
+      <td>5) P  L March 2021.csv (`sales_p_l_march_2021`)</td>
+      <td>Channel MRP consistency check across Ajio/Amazon/Flipkart/Myntra.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("mrp_old", 0)) AS total_metric,\n  AVG(COALESCE("mrp_old", 0)) AS avg_metric\nFROM "mart_may_pricing"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 1,330.00 to 1,330.00.</td>
+      <td>Should I calculate spread percent and outlier products for this pricing view?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>5) P  L March 2021.csv (`sales_p_l_march_2021`)</td>
+      <td>Category and size combinations with highest Final MRP Old.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>5</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "category" AS dimension,\n  SUM(COALESCE("mrp_old", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_may_pricing"\nWHERE "category" IS NOT NULL\nGROUP BY "category"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 5 rows across 3 columns. | `metric_value` range: 77,775.00 to 1,564,282.00. | Top `dimension` by `metric_value`: `KURTA`.</td>
+      <td>Should I add cancellation rate and volume beside the category metric?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>6) Expense IIGF.csv (`sales_expense_iigf`)</td>
+      <td>Total received amount vs total expense amount.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("expense_amount", 0)) AS total_metric,\n  AVG(COALESCE("expense_amount", 0)) AS avg_metric\nFROM "mart_expense_iigf"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 17.00 to 17.00.</td>
+      <td>Do you want a cumulative cashflow trend with running balance?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>27</td>
+      <td>6) Expense IIGF.csv (`sales_expense_iigf`)</td>
+      <td>Top expense particulars by amount.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, total_records</td>
+      <td>SELECT\n  "expense_particular" AS dimension,\n  SUM(COALESCE("expense_amount", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_expense_iigf"\nWHERE "expense_particular" IS NOT NULL\nGROUP BY "expense_particular"\nORDER BY metric_value DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 200.00 to 2,506.00. | Top `dimension` by `metric_value`: `BHUSHAN HOTEL`.</td>
+      <td>Do you want a cumulative cashflow trend with running balance?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>28</td>
+      <td>6) Expense IIGF.csv (`sales_expense_iigf`)</td>
+      <td>Net balance after expenses.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("qty", 0)) AS total_metric,\n  AVG(COALESCE("qty", 0)) AS avg_metric\nFROM "mart_amazon_orders"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 128,975.00 to 128,975.00.</td>
+      <td>Do you want a cumulative cashflow trend with running balance?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>29</td>
+      <td>6) Expense IIGF.csv (`sales_expense_iigf`)</td>
+      <td>Expense share (%) by expense particular.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_value, metric_share_pct</td>
+      <td>WITH base AS (\n  SELECT\n    "expense_particular" AS dimension,\n    SUM(COALESCE("expense_amount", 0)) AS metric_value\n  FROM "mart_expense_iigf"\n  WHERE "expense_particular" IS NOT NULL\n  GROUP BY "expense_particular"\n)\nSELECT\n  dimension,\n  metric_value,\n  100.0 * metric_value / NULLIF((SELECT SUM(metric_value) FROM base), 0) AS metric_share_pct\nFROM base\nORDER BY metric_share_pct DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 3 columns. | `metric_value` range: 200.00 to 2,506.00. | Top `dimension` by `metric_value`: `BHUSHAN HOTEL`.</td>
+      <td>Do you want a cumulative cashflow trend with running balance?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>30</td>
+      <td>6) Expense IIGF.csv (`sales_expense_iigf`)</td>
+      <td>Date-level incoming amount trend.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>4</td>
+      <td>period, metric_value, total_records</td>
+      <td>SELECT\n  CAST("order_month" AS VARCHAR) AS period,\n  SUM(COALESCE("amount", 0)) AS metric_value,\n  COUNT(*) AS total_records\nFROM "mart_amazon_orders"\nWHERE "order_month" IS NOT NULL\nGROUP BY 1\nORDER BY 1</td>
+      <td>Returned 4 rows across 3 columns. | `metric_value` range: 101,683.85 to 28,838,708.32. | Top `period` by `metric_value`: `2022-04`. | Trend axis identified as `period`.</td>
+      <td>Would you like the same trend segmented by top categories?</td>
+      <td></td>
+      <td>True</td>
+      <td>validated</td>
+      <td>line</td>
+      <td>period</td>
+      <td>metric_value</td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>31</td>
+      <td>7) Cloud Warehouse Compersion Chart.csv (`sales_cloud_warehouse_compersion_chart`)</td>
+      <td>Head-wise price comparison between Shiprocket and INCREFF.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("shiprocket_price", 0)) AS total_metric,\n  AVG(COALESCE("shiprocket_price", 0)) AS avg_metric\nFROM "mart_cloud_warehouse"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 50.00 to 50.00.</td>
+      <td>Should I calculate spread percent and outlier products for this pricing view?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>32</td>
+      <td>7) Cloud Warehouse Compersion Chart.csv (`sales_cloud_warehouse_compersion_chart`)</td>
+      <td>Average unit price difference by provider.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_a, metric_b, metric_delta</td>
+      <td>SELECT\n  "head" AS dimension,\n  AVG(COALESCE("shiprocket_price", 0)) AS metric_a,\n  AVG(COALESCE("increff_price", 0)) AS metric_b,\n  AVG(COALESCE("shiprocket_price", 0) - COALESCE("increff_price", 0)) AS metric_delta\nFROM "mart_cloud_warehouse"\nWHERE "head" IS NOT NULL\nGROUP BY "head"\nORDER BY ABS(metric_delta) DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 4 columns. | `metric_a` range: 0.00 to 25.00. | Top `dimension` by `metric_a`: `STORAGE FEE/CFT`.</td>
+      <td>Should I calculate spread percent and outlier products for this pricing view?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.002</td>
+      <td>0.002</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>33</td>
+      <td>7) Cloud Warehouse Compersion Chart.csv (`sales_cloud_warehouse_compersion_chart`)</td>
+      <td>Heads where Shiprocket is cheaper vs INCREFF.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("shiprocket_price", 0)) AS total_metric,\n  AVG(COALESCE("shiprocket_price", 0)) AS avg_metric\nFROM "mart_cloud_warehouse"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 50.00 to 50.00.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>34</td>
+      <td>7) Cloud Warehouse Compersion Chart.csv (`sales_cloud_warehouse_compersion_chart`)</td>
+      <td>Heads where INCREFF is cheaper vs Shiprocket.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("shiprocket_price", 0)) AS total_metric,\n  AVG(COALESCE("shiprocket_price", 0)) AS avg_metric\nFROM "mart_cloud_warehouse"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 50.00 to 50.00.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>35</td>
+      <td>7) Cloud Warehouse Compersion Chart.csv (`sales_cloud_warehouse_compersion_chart`)</td>
+      <td>Overall cost delta if all heads were procured from one provider.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_a, metric_b, metric_delta</td>
+      <td>SELECT\n  "order_id" AS dimension,\n  AVG(COALESCE("qty", 0)) AS metric_a,\n  AVG(COALESCE("amount", 0)) AS metric_b,\n  AVG(COALESCE("qty", 0) - COALESCE("amount", 0)) AS metric_delta\nFROM "mart_amazon_orders"\nWHERE "order_id" IS NOT NULL\nGROUP BY "order_id"\nORDER BY ABS(metric_delta) DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 4 columns. | `metric_a` range: 0.00 to 5.00. | Top `dimension` by `metric_a`: `403-4106553-1691525`.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.008</td>
+      <td>0.008</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>36</td>
+      <td>Cross-File Validation Questions</td>
+      <td>Compare stock-heavy categories (`sales_sale_report`) with high-revenue categories (`mart_amazon_orders`).</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>10</td>
+      <td>dimension, metric_a, metric_b, metric_delta</td>
+      <td>SELECT\n  "order_id" AS dimension,\n  AVG(COALESCE("amount", 0)) AS metric_a,\n  AVG(COALESCE("qty", 0)) AS metric_b,\n  AVG(COALESCE("amount", 0) - COALESCE("qty", 0)) AS metric_delta\nFROM "mart_amazon_orders"\nWHERE "order_id" IS NOT NULL\nGROUP BY "order_id"\nORDER BY ABS(metric_delta) DESC\nLIMIT 10</td>
+      <td>Returned 10 rows across 4 columns. | `metric_a` range: 2,664.00 to 5,495.00. | Top `dimension` by `metric_a`: `403-4106553-1691525`.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.008</td>
+      <td>0.008</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>37</td>
+      <td>Cross-File Validation Questions</td>
+      <td>Compare domestic sales trend with international gross amount trend.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>200</td>
+      <td>period, metric_a, metric_b</td>
+      <td>WITH a AS (\n  SELECT CAST("order_month" AS VARCHAR) AS period, SUM(COALESCE("amount", 0)) AS metric_a\n  FROM "mart_amazon_orders"\n  WHERE "order_month" IS NOT NULL\n  GROUP BY 1\n), b AS (\n  SELECT CAST("month_label" AS VARCHAR) AS period, SUM(COALESCE("gross_amt", 0)) AS metric_b\n  FROM "mart_international_sales"\n  WHERE "month_label" IS NOT NULL\n  GROUP BY 1\n)\nSELECT\n  COALESCE(a.period, b.period) AS period,\n  a.metric_a,\n  b.metric_b\nFROM a\nFULL OUTER JOIN b ON a.period = b.period\nORDER BY period</td>
+      <td>Returned 200 rows across 3 columns. | `metric_b` range: 0.00 to 29,886.00. | Top `period` by `metric_b`: `03-03-22`. | Trend axis identified as `period`.</td>
+      <td>Would you like the same trend segmented by top categories?</td>
+      <td></td>
+      <td>True</td>
+      <td>validated</td>
+      <td>line</td>
+      <td>period</td>
+      <td>metric_a</td>
+      <td>0.003</td>
+      <td>0.003</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>38</td>
+      <td>Cross-File Validation Questions</td>
+      <td>Evaluate if higher MRP channels align with higher sales contribution.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("gross_amt", 0)) AS total_metric,\n  AVG(COALESCE("gross_amt", 0)) AS avg_metric\nFROM "mart_international_sales"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 37,432.00 to 37,432.00.</td>
+      <td>Should I calculate spread percent and outlier products for this pricing view?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>39</td>
+      <td>Cross-File Validation Questions</td>
+      <td>Cross-check pricing spread (May/P&amp;L files) against cancellation-heavy states.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("weight", 0)) AS total_metric,\n  AVG(COALESCE("weight", 0)) AS avg_metric\nFROM "mart_may_pricing"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 1,330.00 to 1,330.00.</td>
+      <td>Do you want a month-wise trend for these top geographies?</td>
+      <td>Cancellation query should include cancellation logic/field.</td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>40</td>
+      <td>Cross-File Validation Questions</td>
+      <td>Build a combined executive summary from all datasets.</td>
+      <td>fast</td>
+      <td>adaptive_fast_sql</td>
+      <td>approved</td>
+      <td>1</td>
+      <td>total_records, total_metric, avg_metric</td>
+      <td>SELECT\n  COUNT(*) AS total_records,\n  SUM(COALESCE("qty", 0)) AS total_metric,\n  AVG(COALESCE("qty", 0)) AS avg_metric\nFROM "mart_amazon_orders"</td>
+      <td>Returned 1 rows across 3 columns. | `total_records` range: 128,975.00 to 128,975.00.</td>
+      <td>Do you want this analysis compared against another relevant dataset?</td>
+      <td></td>
+      <td>False</td>
+      <td>skipped</td>
+      <td>none</td>
+      <td>None</td>
+      <td></td>
+      <td>0.001</td>
+      <td>0.001</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>
